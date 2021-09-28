@@ -14,7 +14,8 @@ router.get('/', userGet)
 
 router.post('/', userPost)
 
-router.put('/', userPut)
+// Se define el id como segmento de ruta
+router.put('/:id', userPut)
 
 router.patch('/', userPatch)
 

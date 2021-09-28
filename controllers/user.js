@@ -1,19 +1,37 @@
 
 const userGet = (req, res) => {
+  // Para obtener argumentos de Query Params
+  const {q, nombre = 'No name', apiKey, page = 1, limit} = req.query
+
   res.json({
-    msg: 'get API - Controlador'
+    msg: 'get API - Controlador',
+    q,
+    nombre,
+    apiKey,
+    page,
+    limit
   })
 }
 
 const userPost = (req, res) => {
+
+  // Obtener el body de la petición
+  const {nombre, edad} = req.body
+
   res.json({
-    msg: 'post API - Controlador'
+    msg: 'post API - Controlador',
+    nombre,
+    edad
   })
 }
 
 const userPut = (req, res) => {
+  // Se obtiene el segmento de ruta id
+  const id = req.params.id
+
   res.json({
-    msg: 'put API - Controlador'
+    msg: 'put API - Controlador',
+    id
   })
 }
 
