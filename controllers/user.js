@@ -1,3 +1,6 @@
+const bcryptjs = require('bcryptjs')
+
+const User = require('../models/user')
 
 const userGet = (req, res) => {
   // Para obtener argumentos de Query Params
@@ -13,15 +16,28 @@ const userGet = (req, res) => {
   })
 }
 
-const userPost = (req, res) => {
+const userPost = async(req, res) => {
 
   // Obtener el body de la petición
-  const {nombre, edad} = req.body
+  const {name, email, password, role} = req.body
+  const user = new User({
+    name,
+    email,
+    role
+  })
+
+  // Verificar si el correo existe
+
+  // Encriptar la contraseña
+  const salt = bcryptjs.genSaltSync()
+  user.password = bcryptjs.hashSync(password, salt)
+
+  // Guardar en DB
+
+  await user.save()
 
   res.json({
-    msg: 'post API - Controlador',
-    nombre,
-    edad
+    user
   })
 }
 
