@@ -27,13 +27,16 @@ const userPost = async(req, res) => {
   })
 
   // Verificar si el correo existe
+  const emailExist = await User.findOne({email})
+  if(emailExist) return res.status(400).json({ 
+    msg: 'El correo ya esta registrado' 
+  })
 
   // Encriptar la contraseña
   const salt = bcryptjs.genSaltSync()
   user.password = bcryptjs.hashSync(password, salt)
 
   // Guardar en DB
-
   await user.save()
 
   res.json({
@@ -55,7 +58,7 @@ const userPatch = (req, res) => {
   res.json({
     msg: 'patch API - Controlador'
   })
-}
+} 
 
 const userDelete = (req, res) => {
   res.json({
