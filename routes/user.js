@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { body } = require('express-validator')
 
 const { validateFields } = require('../middlewares/validateFields')
-const { isValidRole } = require('../helpers/db-validators')
+const { isValidRole, emailExist } = require('../helpers/db-validators')
 
 const { 
   userGet,
@@ -20,6 +20,7 @@ router.post('/', [
   body('name', 'El nombre es obligatorio').not().isEmpty(),
   body('password', 'El password debe de ser más de 6 letras').isLength({ min: 6 }),
   body('email', 'El correo no es válido').isEmail(),
+  body('email').custom(emailExist),
   // body('role', 'No es un rol válido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
   body('role').custom(isValidRole),
   validateFields
