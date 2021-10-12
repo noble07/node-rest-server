@@ -38,13 +38,23 @@ const userPost = async(req, res) => {
   })
 }
 
-const userPut = (req, res) => {
+const userPut = async(req, res) => {
   // Se obtiene el segmento de ruta id
-  const id = req.params.id
+  const {id} = req.params
+  const {password, google, ...rest} = req.body
+
+  // TODO validar contra BBDD
+  if (password) {
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync()
+    rest.password = bcryptjs.hashSync(password, salt)
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest)
 
   res.json({
     msg: 'put API - Controlador',
-    id
+    user
   })
 }
 
