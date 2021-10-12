@@ -1,8 +1,8 @@
 const { Router } = require('express')
-const { body } = require('express-validator')
+const { body, param } = require('express-validator')
 
 const { validateFields } = require('../middlewares/validateFields')
-const { isValidRole, emailExist } = require('../helpers/db-validators')
+const { isValidRole, emailExist, userByIdExist } = require('../helpers/db-validators')
 
 const { 
   userGet,
@@ -27,7 +27,12 @@ router.post('/', [
 ], userPost)
 
 // Se define el id como segmento de ruta
-router.put('/:id', userPut)
+router.put('/:id', [
+  param('id', 'No es un ID válido').isMongoId(),
+  param('id').custom(userByIdExist),
+  body('role').optional().custom(isValidRole),
+  validateFields
+], userPut)
 
 router.patch('/', userPatch)
 
