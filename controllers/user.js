@@ -5,12 +5,19 @@ const User = require('../models/user')
 const userGet = async(req, res) => {
 
   const { limit = 5, offset = 0 } = req.query
+  const query = {state:true}
 
-  const users = await User.find()
+  //Se agregan ambas consultas en un Promise.all para que se ejecuten en simultaneo
+  //y no tener que esperar con await uno y luego la otra.
+  const [total, users] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query)
     .skip(Number(offset))
     .limit(Number(limit))
+  ])
 
   res.json({
+    total,
     users
   })
 }
