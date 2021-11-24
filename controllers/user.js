@@ -70,10 +70,6 @@ const userPatch = (req, res) => {
 const userDelete = async(req, res) => {
 
   const {id} = req.params
-
-  //Fisicamente lo borramos
-  // const user = await User.findByIdAndDelete(id)
-
   const user = await User.findByIdAndUpdate(id, {state: false}, {new: true})
 
   res.json(user)
