@@ -1,9 +1,6 @@
 const { Router } = require('express')
 const { body, param } = require('express-validator')
 
-/* const { validateFields } = require('../middlewares/validateFields')
-const { validateJWT } = require('../middlewares/validateJWT')
-const { hasRole } = require('../middlewares/validateRoles') */
 const {
   validateFields,
   validateJWT,
@@ -14,7 +11,7 @@ const {
   isValidRole, 
   emailExist, 
   userByIdExist 
-} = require('../helpers/db-validators')
+} = require('../helpers/dbValidators')
 
 const { 
   userGet,
@@ -40,8 +37,7 @@ router.post('/', [
 
 // Se define el id como segmento de ruta
 router.put('/:id', [
-  param('id', 'No es un ID válido').isMongoId(),
-  param('id').custom(userByIdExist),
+  param('id', 'No es un ID válido').isMongoId().bail().custom(userByIdExist),
   body('role').optional().custom(isValidRole),
   validateFields
 ], userPut)
@@ -52,8 +48,7 @@ router.delete('/:id', [
   validateJWT,
   // isAdminRole,
   hasRole('ADMIN_ROLE', 'USER_ROLE'),
-  param('id', 'No es un ID válido').isMongoId(),
-  param('id').custom(userByIdExist),
+  param('id', 'No es un ID válido').isMongoId().bail().custom(userByIdExist),
   validateFields
 ],userDelete)
 
