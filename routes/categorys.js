@@ -17,7 +17,7 @@ const router = Router()
 
 /**
  * 
- * {{url}}/api/category
+ * {{url}}/api/categorys
  * 
  */
 
@@ -26,8 +26,7 @@ router.get('/', getCategorys)
 
 // Obtener una categoría por id - publico
 router.get('/:id', [
-  param('id', 'No es un ID válido').isMongoId(),
-  param('id').custom(categoryIdExist),
+  param('id', 'No es un ID válido').isMongoId().bail().custom(categoryIdExist),
   validateFields
 ], getCategory)
 
