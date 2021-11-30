@@ -9,8 +9,9 @@ class Server {
 
     this.paths = {
       auth: '/api/auth',
-      category: '/api/category',
-      user: '/api/user',
+      category: '/api/categorys',
+      product: '/api/products',
+      user: '/api/users',
     }
 
     // Conectar a BD
@@ -39,8 +40,8 @@ class Server {
 
   routes() {
     this.app.use(this.paths.auth, require('../routes/auth'))
-    this.app.use(this.paths.category, require('../routes/category'))
-    this.app.use(this.paths.user, require('../routes/user'))
+    this.app.use(this.paths.category, require('../routes/categorys'))
+    this.app.use(this.paths.user, require('../routes/users'))
   }
 
   listen() {

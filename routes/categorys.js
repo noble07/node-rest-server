@@ -10,7 +10,7 @@ const {
   getCategory, 
   updateCategory,
   deleteCategory
-} = require('../controllers/category')
+} = require('../controllers/categorys')
 
 
 const router = Router()
