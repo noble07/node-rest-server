@@ -104,26 +104,26 @@ const updateUserImgCloudinary = async(req, res) => {
       })
   }
   
-  
-  // Limpiar imagenes previas
-  if (model.img) {
-    const nameArr = model.img.split('/')
-    const [publicId] = nameArr.at(-1).split('.')
-
-    // No se utiliza await dado que no es necesario esperar
-    // a que elimine la imagen para continuar con el proceso
-    cloudinary.uploader.destroy(publicId)
-  }
-  
-  const {tempFilePath} = req.files.file
-  const {secure_url} = await cloudinary.uploader.upload(tempFilePath)
-
-  model.img = secure_url
-
-  await model.save()
-
-  res.json(model)
   try {
+    
+    // Limpiar imagenes previas
+    if (model.img) {
+      const nameArr = model.img.split('/')
+      const [publicId] = nameArr[nameArr.length - 1].split('.')
+
+      // No se utiliza await dado que no es necesario esperar
+      // a que elimine la imagen para continuar con el proceso
+      cloudinary.uploader.destroy(publicId)
+    }
+    
+    const {tempFilePath} = req.files.file
+    const {secure_url} = await cloudinary.uploader.upload(tempFilePath)
+
+    model.img = secure_url
+
+    await model.save()
+
+    res.json(model)
 
   } catch (msg) {
     res.status(400).json({
