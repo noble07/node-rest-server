@@ -111,6 +111,8 @@ const updateUserImgCloudinary = async(req, res) => {
       const nameArr = model.img.split('/')
       const [publicId] = nameArr.at(-1).split('.')
 
+      // No se utiliza await dado que no es necesario esperar
+      // a que elimine la imagen para continuar con el proceso
       cloudinary.uploader.destroy(publicId)
     }
     
