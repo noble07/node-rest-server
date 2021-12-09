@@ -26,10 +26,24 @@ const producIdExist = async(id) => {
   if(!productExist) throw new Error(`El id: ${id} no existe`)
 }
 
+/**
+ * Validate Allowed Collections
+ */
+const allowedCollections = (collection = '', collections = []) => {
+  const included = collections.includes(collection)
+  if (!included) {
+    throw new Error(`La colleción ${collection} no es permitida, ${collections}`)
+  }
+
+  return true
+}
+
+
 module.exports = {
   isValidRole,
   emailExist,
   userByIdExist,
   categoryIdExist,
-  producIdExist
+  producIdExist,
+  allowedCollections
 }
