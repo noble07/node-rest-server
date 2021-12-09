@@ -1,6 +1,9 @@
 const path = require('path')
 const fs = require('fs')
 
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL)
+
 const {saveFile} = require('../helpers')
 const {User, Product} = require('../models')
 
@@ -74,6 +77,59 @@ const updateUserImg = async(req, res) => {
   }
 }
 
+const updateUserImgCloudinary = async(req, res) => {
+
+  const {id, collection} = req.params
+
+  let model
+
+  switch (collection) {
+    case 'users':
+      model = await User.findById(id)
+      if(!model) return res.status(400).json({
+        msg: `No existe un usuario con el id ${id}`
+      })
+      break;
+    
+    case 'products':
+    model = await Product.findById(id)
+    if(!model) return res.status(400).json({
+      msg: `No existe un producto con el id ${id}`
+    })
+      break;
+  
+    default:
+      return res.status(500).json({
+        msg: 'Se me olvidó validar esto'
+      })
+  }
+  
+  try {
+    
+    // Limpiar imagenes previas
+    if (model.img) {
+      const nameArr = model.img.split('/')
+      const [publicId] = nameArr.at(-1).split('.')
+
+      cloudinary.uploader.destroy(publicId)
+    }
+    
+    const {tempFilePath} = req.files.file
+    const {secure_url} = await cloudinary.uploader.upload(tempFilePath)
+
+    model.img = secure_url
+
+    await model.save()
+
+    res.json(model)
+
+  } catch (msg) {
+    res.status(400).json({
+      msg
+    })
+  }
+}
+
 const showImage = async(req, res) => {
   
   const {id, collection} = req.params
@@ -130,5 +186,6 @@ const showImage = async(req, res) => {
 module.exports = {
   uploadFile,
   updateUserImg,
-  showImage
+  showImage,
+  updateUserImgCloudinary
 }
